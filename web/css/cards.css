@@ -1,0 +1,386 @@
+/* ============================================================
+   PokerStack playing cards — pure CSS, 3D flips, gold filigree backs
+   ============================================================ */
+
+.pcard {
+  --card-w: 64px;
+  --card-radius: calc(var(--card-w) * 0.08);
+  --suit-colour: #17181e;
+  position: relative;
+  width: var(--card-w);
+  aspect-ratio: 5 / 7;
+  perspective: calc(var(--card-w) * 10);
+  flex: 0 0 auto;
+  transform-style: preserve-3d;
+  transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.32s;
+  will-change: transform;
+}
+.pcard.red { --suit-colour: #b3282f; }
+.pcard-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.62s cubic-bezier(0.2, 0.72, 0.2, 1);
+  border-radius: var(--card-radius);
+}
+.pcard.face-down .pcard-inner { transform: rotateY(180deg); }
+
+/* -------------------------------------------------------------- front */
+.pcard-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--card-radius);
+  background:
+    radial-gradient(120% 90% at 26% 4%, #fffdf6 0%, #f8f1e3 34%, #efe3ca 74%, #e7d8ba 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(138, 109, 31, 0.5),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 10px 18px rgba(0, 0, 0, 0.42),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  color: var(--suit-colour);
+}
+.pcard-face::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--card-w) * 0.035);
+  border: 1px solid rgba(138, 109, 31, 0.36);
+  border-radius: calc(var(--card-radius) * 0.72);
+  pointer-events: none;
+  z-index: 4;
+}
+.pcard-face::after {
+  /* glossy paper sweep */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(118deg, transparent 26%, rgba(255, 255, 255, 0.44) 44%, rgba(255, 255, 255, 0.04) 54%, transparent 66%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 5;
+}
+.pcard-face .paper-texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.32;
+  background-image:
+    radial-gradient(rgba(120, 96, 42, 0.16) 0.55px, transparent 0.55px),
+    radial-gradient(rgba(255, 255, 255, 0.8) 0.55px, transparent 0.55px);
+  background-size: 4px 4px, 6px 6px;
+  background-position: 0 0, 2px 2px;
+  pointer-events: none;
+}
+
+/* corner indices */
+.idx {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.92;
+  z-index: 3;
+  font-family: var(--serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: calc(var(--card-w) * 0.205);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.idx i {
+  font-style: normal;
+  font-size: calc(var(--card-w) * 0.16);
+  margin-top: calc(var(--card-w) * 0.018);
+  line-height: 1;
+}
+.idx-tl { top: calc(var(--card-w) * 0.06); left: calc(var(--card-w) * 0.07); }
+.idx-br { bottom: calc(var(--card-w) * 0.06); right: calc(var(--card-w) * 0.07); transform: rotate(180deg); }
+
+/* -------------------------------------------------------------- pips */
+.pcard-art {
+  position: absolute;
+  inset: calc(var(--card-w) * 0.19) calc(var(--card-w) * 0.17);
+  z-index: 2;
+}
+.pip {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: calc(var(--card-w) * 0.235);
+  line-height: 1;
+  filter: drop-shadow(0 0.5px 0 rgba(255, 255, 255, 0.65));
+}
+.pcard-art.many .pip { font-size: calc(var(--card-w) * 0.19); }
+.pip.flip { transform: translate(-50%, -50%) rotate(180deg); }
+
+/* -------------------------------------------------------------- ace */
+.ace-art {
+  position: absolute;
+  inset: 12% 10%;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+}
+.ace-rays {
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(from 0deg, rgba(212, 175, 55, 0.2) 0deg 2deg, transparent 2deg 16deg);
+  mask: radial-gradient(circle, transparent 0 39%, #000 40% 72%, transparent 73%);
+  -webkit-mask: radial-gradient(circle, transparent 0 39%, #000 40% 72%, transparent 73%);
+  opacity: 0.85;
+}
+.ace-ring {
+  position: absolute;
+  width: 58%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(138, 109, 31, 0.5);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 calc(var(--card-w) * 0.02) rgba(212, 175, 55, 0.1);
+}
+.ace-ring::after {
+  content: "";
+  position: absolute;
+  inset: 10%;
+  border: 1px dashed rgba(138, 109, 31, 0.36);
+  border-radius: 50%;
+}
+.ace-suit {
+  position: relative;
+  font-size: calc(var(--card-w) * 0.56);
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+.ace-caption {
+  position: absolute;
+  bottom: -2%;
+  font-family: var(--serif);
+  font-size: calc(var(--card-w) * 0.085);
+  letter-spacing: 0.34em;
+  color: rgba(138, 109, 31, 0.9);
+  text-transform: uppercase;
+}
+
+/* -------------------------------------------------------- court cards */
+.court-art {
+  position: absolute;
+  inset: 3% 1%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+}
+.court-frame {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(138, 109, 31, 0.38);
+  border-radius: 3px;
+  background:
+    linear-gradient(180deg, rgba(212, 175, 55, 0.14), transparent 22%, transparent 78%, rgba(212, 175, 55, 0.12)),
+    repeating-linear-gradient(45deg, transparent 0 5px, rgba(138, 109, 31, 0.07) 5px 6px);
+  box-shadow: inset 0 0 12px rgba(138, 109, 31, 0.08);
+}
+.court-frame::before, .court-frame::after {
+  content: "";
+  position: absolute;
+  left: 8%; right: 8%;
+  height: 15%;
+  border: 1px solid rgba(138, 109, 31, 0.3);
+  border-left: 0;
+  border-right: 0;
+}
+.court-frame::before { top: 3%; border-top-color: rgba(212, 175, 55, 0.45); }
+.court-frame::after { bottom: 3%; border-bottom-color: rgba(212, 175, 55, 0.45); }
+.court-letter {
+  position: relative;
+  font-family: var(--serif);
+  font-size: calc(var(--card-w) * 0.57);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--suit-colour);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6),
+    0 0 14px rgba(212, 175, 55, 0.16);
+}
+.court-letter::before, .court-letter::after {
+  content: "\2666";
+  position: absolute;
+  font-size: calc(var(--card-w) * 0.1);
+  color: rgba(138, 109, 31, 0.75);
+  top: 12%;
+}
+.court-letter::before { left: calc(var(--card-w) * -0.2); }
+.court-letter::after { right: calc(var(--card-w) * -0.2); }
+.court-suit {
+  position: absolute;
+  font-size: calc(var(--card-w) * 0.15);
+  line-height: 1;
+  color: var(--suit-colour);
+  opacity: 0.92;
+}
+.court-suit.top { top: 10%; }
+.court-suit.bottom { bottom: 10%; transform: rotate(180deg); }
+.court-crown {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  width: 34%;
+  height: 12%;
+  transform: translateX(-50%);
+  border-top: 1px solid rgba(138, 109, 31, 0.7);
+  border-radius: 50% 50% 0 0;
+}
+.court-crown::before, .court-crown::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 7px; height: 7px;
+  border: 1px solid rgba(138, 109, 31, 0.7);
+  transform: rotate(45deg);
+}
+.court-crown::before { left: 0; }
+.court-crown::after { right: 0; }
+
+/* --------------------------------------------------------------- back */
+.pcard-back {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(212, 175, 55, 0.16), transparent 44%),
+    linear-gradient(145deg, #0b1122 0%, #05070f 48%, #0a0e1d 100%);
+  border: calc(var(--card-w) * 0.028) solid #0c0f19;
+  box-shadow:
+    inset 0 0 0 1px rgba(212, 175, 55, 0.55),
+    inset 0 0 0 calc(var(--card-w) * 0.045) rgba(212, 175, 55, 0.09),
+    0 10px 18px rgba(0, 0, 0, 0.48);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(180deg);
+}
+.pcard-back::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--card-w) * 0.075);
+  border: 1px solid rgba(212, 175, 55, 0.42);
+  border-radius: calc(var(--card-radius) * 0.6);
+  background:
+    repeating-linear-gradient(45deg, transparent 0 calc(var(--card-w) * 0.075), rgba(212, 175, 55, 0.14) calc(var(--card-w) * 0.075) calc(var(--card-w) * 0.083)),
+    repeating-linear-gradient(-45deg, transparent 0 calc(var(--card-w) * 0.075), rgba(212, 175, 55, 0.14) calc(var(--card-w) * 0.075) calc(var(--card-w) * 0.083));
+  opacity: 0.9;
+}
+.pcard-back::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--card-w) * 0.19);
+  border: 1px solid rgba(212, 175, 55, 0.34);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 62%),
+    repeating-conic-gradient(from 0deg, rgba(212, 175, 55, 0.16) 0 1deg, transparent 1deg 15deg);
+  mask: radial-gradient(circle, #000 0 62%, transparent 63%);
+  -webkit-mask: radial-gradient(circle, #000 0 62%, transparent 63%);
+}
+.back-crest {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(212, 175, 55, 0.68);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 30%, rgba(245, 217, 122, 0.2), rgba(5, 7, 15, 0.94) 66%);
+  color: var(--gold-light);
+  font-size: calc(var(--card-w) * 0.26);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.45);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.16);
+}
+.back-crest::after {
+  content: "";
+  position: absolute;
+  inset: 13%;
+  border: 1px dashed rgba(212, 175, 55, 0.24);
+  border-radius: 50%;
+}
+
+/* ---------------------------------------------------------- animation */
+.pcard.will-deal { opacity: 0; }
+.pcard.will-flip .pcard-inner { transform: rotateY(180deg); }
+.pcard.deal-in {
+  animation: dealIn 0.68s cubic-bezier(0.18, 0.78, 0.2, 1) both;
+  animation-delay: var(--deal-delay, 0ms);
+}
+@keyframes dealIn {
+  0% {
+    opacity: 0;
+    transform: translate(var(--dx, 0px), var(--dy, 0px)) rotate(-24deg) scale(0.55);
+  }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+}
+.pcard.flip-in .pcard-inner {
+  animation: cardFlip 0.72s cubic-bezier(0.24, 0.74, 0.2, 1) both;
+  animation-delay: var(--flip-delay, 0ms);
+}
+@keyframes cardFlip {
+  0% { transform: rotateY(180deg) translateY(-10px); }
+  100% { transform: rotateY(0deg) translateY(0); }
+}
+.pcard.winner {
+  transform: translateY(calc(var(--card-w) * -0.08));
+  filter: drop-shadow(0 0 calc(var(--card-w) * 0.22) rgba(245, 217, 122, 0.7));
+  animation: winnerCard 1.8s ease-in-out infinite alternate;
+}
+.pcard.winner .pcard-face {
+  box-shadow:
+    inset 0 0 0 1.5px rgba(212, 175, 55, 0.95),
+    inset 0 0 0 4px rgba(255, 250, 226, 0.6),
+    0 0 calc(var(--card-w) * 0.3) rgba(245, 217, 122, 0.45),
+    0 12px 22px rgba(0, 0, 0, 0.45);
+}
+@keyframes winnerCard {
+  from { transform: translateY(calc(var(--card-w) * -0.08)); }
+  to { transform: translateY(calc(var(--card-w) * -0.16)); }
+}
+.pcard.dimmed { opacity: 0.46; filter: saturate(0.6); }
+
+.pcard.tilt { transition: transform 0.28s ease, filter 0.28s ease; }
+.pcard.tilt:hover {
+  transform: translateY(calc(var(--card-w) * -0.08)) rotateX(4deg) rotateY(-4deg);
+  z-index: 5;
+}
+
+/* mini backs used in seat card slots / visualizer */
+.mini-card {
+  width: var(--mini-w, 26px);
+  aspect-ratio: 5 / 7;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.2), transparent 55%),
+    repeating-linear-gradient(45deg, transparent 0 4px, rgba(212, 175, 55, 0.12) 4px 5px),
+    repeating-linear-gradient(-45deg, transparent 0 4px, rgba(212, 175, 55, 0.12) 4px 5px),
+    linear-gradient(145deg, #0b1122, #04060c);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(5, 7, 15, 0.6);
+}
+
+/* card placeholders keep layout steady before the deal */
+.card-slot {
+  width: var(--card-w, 64px);
+  aspect-ratio: 5 / 7;
+  border-radius: calc(var(--card-w, 64px) * 0.08);
+  border: 1px dashed rgba(212, 175, 55, 0.18);
+  background: rgba(5, 7, 15, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard, .pcard-inner, .pcard-face, .pcard-back { transition: none !important; animation: none !important; }
+  .pcard.deal-in, .pcard.flip-in .pcard-inner, .pcard.winner { animation: none !important; }
+  .hero-cards .pcard { transition: none; }
+}

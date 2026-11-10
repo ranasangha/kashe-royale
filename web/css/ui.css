@@ -1,0 +1,198 @@
+/* ============================================================
+   PokerStack — modal content, cheat sheet, settings, history
+   ============================================================ */
+
+/* ------------------------------------------------------------ cheat sheet */
+.cheat-list { display: flex; flex-direction: column; gap: 6px; }
+.cheat-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  border-radius: 9px;
+  background: rgba(7, 10, 20, 0.5);
+}
+.cheat-row.top { border-color: rgba(212, 175, 55, 0.32); background: rgba(212, 175, 55, 0.05); }
+.cheat-rank {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--gold-light);
+  font-family: var(--serif);
+  font-size: 11px;
+}
+.cheat-name { font-size: 12px; color: var(--ivory); }
+.cheat-name small { display: block; color: var(--muted); font-size: 9.5px; margin-top: 1px; }
+.cheat-example {
+  display: flex;
+  gap: 3px;
+  color: var(--gold-light);
+  font-family: var(--serif);
+  font-size: 10px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.cheat-example span {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: rgba(248, 241, 227, 0.07);
+  border: 1px solid rgba(212, 175, 55, 0.12);
+}
+.cheat-example .red { color: #e58f88; }
+.cheat-note {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-left: 2px solid var(--gold);
+  background: rgba(212, 175, 55, 0.05);
+  color: var(--muted);
+  font-size: 10.5px;
+  border-radius: 0 6px 6px 0;
+}
+
+/* ---------------------------------------------------------------- settings */
+.settings-form { display: grid; gap: 14px; }
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.settings-form .field > span { font-size: 10px; }
+.settings-form .field input, .settings-form .field select { padding: 9px 11px; font-size: 13px; }
+.settings-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 9px 16px; }
+.settings-note {
+  padding: 10px 12px;
+  border: 1px dashed rgba(212, 175, 55, 0.25);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+.settings-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+
+/* ----------------------------------------------------------------- history */
+.history-list { display: flex; flex-direction: column; gap: 6px; }
+.history-row {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 11px;
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  border-radius: 8px;
+  background: rgba(7, 10, 20, 0.5);
+}
+.history-row .h-no {
+  font-family: var(--serif);
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.history-row .h-main { min-width: 0; }
+.history-row .h-title { font-size: 12px; color: var(--ivory); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-row .h-sub { font-size: 9.5px; color: var(--muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-row .h-amount {
+  font-family: var(--serif);
+  color: var(--gold-light);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.history-row .h-cards { display: flex; gap: 2px; margin-left: auto; }
+.history-row .mini-card { --mini-w: 14px; }
+.history-empty { color: var(--muted); font-size: 12px; text-align: center; padding: 24px; }
+
+/* ------------------------------------------------------------------- rules */
+.rules-scroll h3 { font-size: 14px; margin-top: 18px; }
+.rules-scroll h3:first-child { margin-top: 0; }
+.rules-scroll p, .rules-scroll li { font-size: 12px; line-height: 1.65; }
+.rules-scroll .rule-callout {
+  margin: 14px 0;
+  padding: 11px 13px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 8px;
+  background: rgba(212, 175, 55, 0.05);
+  color: var(--ivory-dim);
+  font-size: 11.5px;
+}
+.rules-scroll .rule-callout strong { color: var(--gold-light); }
+
+/* ------------------------------------------------------------- leave dialog */
+.confirm-copy { color: var(--ivory-dim); font-size: 13px; line-height: 1.65; }
+.confirm-copy strong { color: var(--gold-light); }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+
+/* ---------------------------------------------------------- misc polish */
+.settings-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.save-flash { color: var(--green); font-size: 11px; }
+
+.invite-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 7px;
+  background: rgba(3, 5, 12, 0.55);
+  font-size: 10px;
+  color: var(--muted);
+  word-break: break-all;
+}
+.invite-line code { color: var(--gold-light); font-size: 10px; }
+
+.kbd-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.kbd-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.kbd-row kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--gold-light);
+  font-family: var(--sans);
+  font-size: 9px;
+}
+
+/* compact action dock when spectator: hide wager area */
+.action-dock.spectator .dock-actions { display: none; }
+
+/* status chip on waiting screen */
+.waiting-banner {
+  position: absolute;
+  left: 50%;
+  top: 24%;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 10px 18px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 999px;
+  background: rgba(5, 7, 15, 0.86);
+  color: var(--gold-light);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* turn highlight bar */
+.action-dock.myturn { border-color: rgba(212, 175, 55, 0.45); box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.65), 0 -1px 0 rgba(245, 217, 122, 0.3); }
+
+@media (max-width: 700px) {
+  .settings-grid, .settings-checks { grid-template-columns: 1fr; }
+  .cheat-row { grid-template-columns: 24px minmax(0, 1fr); }
+  .cheat-example { grid-column: 2; flex-wrap: wrap; }
+  .history-row { grid-template-columns: 42px minmax(0, 1fr) auto; }
+  .history-row .h-cards { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viz-back, .viz-act, .viz-feed-item, .chip-disc { animation: none !important; }
+}

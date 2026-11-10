@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: kashe-royale
+    runtime: python
+    plan: free
+    buildCommand: "echo 'Kashe Royale needs no build step'"
+    startCommand: "python run.py --no-browser"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.6"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    healthCheckPath: /api/health

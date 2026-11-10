@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#05060a" />
+  <title>Kashe Royale — Royal Texas Hold'em</title>
+  <meta name="description" content="A premium No-Limit Texas Hold'em table with virtual chips, built on a hand-written Stack data structure." />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/cards.css" />
+  <link rel="stylesheet" href="css/table.css" />
+  <link rel="stylesheet" href="css/ui.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305060a'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23d4af37'%3E%E2%99%A0%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient-glow glow-one"></div>
+    <div class="ambient-glow glow-two"></div>
+    <div class="ambient-grain"></div>
+  </div>
+
+  <!-- ============================================================ LOBBY -->
+  <main id="lobbyView" class="lobby view">
+    <header class="lobby-top">
+      <div class="brand">
+        <span class="brand-mark">&#9824;</span>
+        <span class="brand-word">Kashe<span>Royale</span></span>
+      </div>
+      <div class="lobby-badge"><span class="pulse-dot"></span> Stack-powered Hold'em</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Virtual chips &middot; Private tables &middot; No downloads</p>
+        <h1>Royal <em>Texas</em><br />Hold&rsquo;em</h1>
+        <p class="hero-sub">
+          A midnight-black private casino with gold rails, real side pots and a
+          hand-written <strong>Stack</strong> running the deck, the burns, the
+          action history and every side pot layer.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-gold" data-scroll-to="createPanel">Create a table</button>
+          <button class="btn btn-ghost" id="heroPracticeBtn">Practice on this screen</button>
+        </div>
+        <ul class="hero-points">
+          <li><span>&#9824;</span> 2&ndash;6 seats online, 2&ndash;10 in the engine</li>
+          <li><span>&#9829;</span> Fair shuffled deck, private hole cards</li>
+          <li><span>&#9830;</span> Side pots, uncalled bets, odd chips</li>
+        </ul>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="hero-halo"></div>
+        <div id="heroCards" class="hero-cards"></div>
+        <div class="hero-table-ring"></div>
+      </div>
+    </section>
+
+    <section class="lobby-grid">
+      <article class="panel create-panel" id="createPanel">
+        <header class="panel-head">
+          <span class="panel-kicker">Host</span>
+          <h2>Open a private table</h2>
+          <p>You get a five-letter room code. Share it, or invite a second device on the same Wi-Fi.</p>
+        </header>
+        <form id="createForm" class="form-grid" autocomplete="off">
+          <label class="field">
+            <span>Your name</span>
+            <input name="name" maxlength="18" placeholder="The Duke" required />
+          </label>
+          <label class="field">
+            <span>Table name</span>
+            <input name="table_name" maxlength="40" value="The Velvet Room" />
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>Starting chips</span>
+              <input name="starting_chips" type="number" min="100" max="1000000" step="100" value="1000" />
+            </label>
+            <label class="field">
+              <span>Seats</span>
+              <select name="max_players">
+                <option value="2" selected>2 players</option>
+                <option value="3">3 players</option>
+                <option value="4">4 players</option>
+                <option value="5">5 players</option>
+                <option value="6">6 players</option>
+              </select>
+            </label>
+          </div>
+          <details class="advanced">
+            <summary>Blinds &amp; table options</summary>
+            <div class="field-row">
+              <label class="field">
+                <span>Small blind</span>
+                <input name="small_blind" type="number" min="1" max="10000" value="5" />
+              </label>
+              <label class="field">
+                <span>Big blind</span>
+                <input name="big_blind" type="number" min="2" max="20000" value="10" />
+              </label>
+            </div>
+            <label class="field">
+              <span>Turn timer (seconds, 0 = off)</span>
+              <input name="turn_seconds" type="number" min="0" max="300" value="30" />
+            </label>
+            <div class="check-grid">
+              <label class="check"><input type="checkbox" name="late_join" checked /><span>Late joining</span></label>
+              <label class="check"><input type="checkbox" name="spectators" checked /><span>Spectators</span></label>
+              <label class="check"><input type="checkbox" name="private" /><span>Private (no lobby listing)</span></label>
+              <label class="check"><input type="checkbox" name="demo_mode" /><span>Demo mode (undo + deck peek)</span></label>
+            </div>
+          </details>
+          <button class="btn btn-gold btn-block" type="submit">Create table <span class="btn-arrow">&rarr;</span></button>
+        </form>
+      </article>
+
+      <article class="panel join-panel">
+        <header class="panel-head">
+          <span class="panel-kicker">Guest</span>
+          <h2>Join with a code</h2>
+          <p>Enter the five-letter code from the host. Your hole cards stay private on your own screen.</p>
+        </header>
+        <form id="joinForm" class="form-grid" autocomplete="off">
+          <label class="field">
+            <span>Room code</span>
+            <input name="code" id="joinCode" maxlength="8" placeholder="ABCDE" class="code-input" required />
+          </label>
+          <label class="field">
+            <span>Your name</span>
+            <input name="name" maxlength="18" placeholder="The Duchess" required />
+          </label>
+          <label class="check"><input type="checkbox" name="spectator" /><span>Join as spectator</span></label>
+          <button class="btn btn-outline btn-block" type="submit">Take a seat <span class="btn-arrow">&rarr;</span></button>
+        </form>
+        <div class="divider"><span>or</span></div>
+        <button class="btn btn-ghost btn-block" id="practiceBtn">Hot-seat practice &middot; one screen</button>
+        <p class="micro">Practice mode exposes all cards, enables undo and deck peek &mdash; perfect for the class demo.</p>
+      </article>
+    </section>
+
+    <section class="open-tables" id="openTablesSection">
+      <div class="section-head">
+        <h2>Open tables</h2>
+        <button class="btn btn-tiny btn-ghost" id="refreshTables">Refresh</button>
+      </div>
+      <div id="openTables" class="table-list"><p class="empty-note">Looking for open tables&hellip;</p></div>
+    </section>
+
+    <footer class="lobby-footer">
+      <span>&#9824; Kashe Royale &mdash; a Fundamentals of Data Structures project</span>
+      <span>Virtual chips only. No real-money gambling, deposits or prizes.</span>
+    </footer>
+  </main>
+
+  <!-- ============================================================ GAME -->
+  <main id="gameView" class="game view" hidden>
+    <header class="app-header">
+      <div class="app-header-left">
+        <div class="brand brand-small">
+          <span class="brand-mark">&#9824;</span>
+          <span class="brand-word">Kashe<span>Royale</span></span>
+        </div>
+        <div class="table-title">
+          <h1 id="tableName">The Velvet Room</h1>
+          <p><span id="handLabel">Waiting for players</span><span class="dot-sep">&middot;</span><span id="blindLabel">5 / 10</span><span class="dot-sep">&middot;</span><span id="playersLabel">0 players</span></p>
+        </div>
+      </div>
+      <div class="app-header-actions">
+        <button class="room-code" id="roomCodeBtn" title="Copy room code">
+          <span class="room-code-label">Room</span>
+          <span id="roomCode">-----</span>
+          <span class="copy-glyph">&#10697;</span>
+        </button>
+        <button class="icon-btn" id="stackVizBtn" title="Show / hide the Stack Visualizer" aria-pressed="false"><span class="icon">&#9776;</span><span class="icon-label">Stack</span></button>
+        <button class="icon-btn" id="rankingsBtn" title="Hand rankings cheat sheet"><span class="icon">&#9819;</span><span class="icon-label">Ranks</span></button>
+        <button class="icon-btn" id="historyBtn" title="Hand history"><span class="icon">&#9202;</span><span class="icon-label">History</span></button>
+        <button class="icon-btn" id="rulesBtn" title="Rules"><span class="icon">?</span><span class="icon-label">Rules</span></button>
+        <button class="icon-btn" id="settingsBtn" title="Table settings (host)"><span class="icon">&#9881;</span><span class="icon-label">Settings</span></button>
+        <button class="icon-btn" id="muteBtn" title="Mute / unmute sound" aria-pressed="false"><span class="icon" id="muteIcon">&#9834;</span><span class="icon-label" id="muteLabel">Sound</span></button>
+        <button class="icon-btn" id="musicBtn" title="Background music on / off" aria-pressed="false"><span class="icon" id="musicIcon">&#9835;</span><span class="icon-label" id="musicLabel">Music</span></button>
+        <button class="icon-btn danger" id="leaveBtn" title="Leave the table"><span class="icon">&#10162;</span><span class="icon-label">Leave</span></button>
+      </div>
+    </header>
+
+    <section class="table-stage" id="tableStage">
+      <div class="table-rail" aria-hidden="true"></div>
+      <div class="table-felt" aria-hidden="true">
+        <div class="felt-texture"></div>
+        <div class="felt-vignette"></div>
+        <div class="felt-line"></div>
+        <div class="felt-monogram">PS</div>
+      </div>
+
+      <div class="table-center">
+        <div class="pot-row">
+          <div class="pot-chips" id="potChips" aria-hidden="true"></div>
+          <div class="pot-meta">
+            <span class="pot-label">POT</span>
+            <span class="pot-amount" id="potAmount">0</span>
+          </div>
+          <div class="pot-side" id="potSide" title="Side pot layers"></div>
+        </div>
+        <div class="community" id="community" aria-label="Community cards"></div>
+        <div class="street-label" id="streetLabel">Waiting for the deal</div>
+        <div class="table-message" id="tableMessage"></div>
+      </div>
+
+      <div class="deck-anchor" id="deckAnchor" title="Deck (Stack)">
+        <div class="deck-card"></div>
+        <div class="deck-card"></div>
+        <div class="deck-card"></div>
+        <span class="deck-count" id="deckCount">52</span>
+        <span class="deck-caption">DECK STACK</span>
+      </div>
+
+      <div class="dealer-anchor" id="dealerAnchor" hidden></div>
+      <div id="seatsLayer" class="seats-layer"></div>
+      <div id="chiplayers" class="chip-layer"></div>
+
+      <div id="winnerBanner" class="winner-banner" hidden>
+        <button class="winner-close" id="winnerClose" aria-label="Dismiss">&times;</button>
+        <span class="winner-kicker">Winner</span>
+        <h2 id="winnerTitle">Alice wins 240</h2>
+        <p id="winnerHand">Full House, Aces over Kings</p>
+        <div id="winnerPots" class="winner-pots"></div>
+      </div>
+    </section>
+
+    <section class="action-dock" id="actionDock">
+      <div class="dock-status">
+        <div class="dock-turn">
+          <span class="turn-dot" id="turnDot"></span>
+          <span id="turnText">Waiting for players&hellip;</span>
+        </div>
+        <div class="turn-timer" id="turnTimerBar" hidden><span id="turnTimerFill"></span></div>
+        <div class="dock-note" id="dockNote"></div>
+      </div>
+
+      <div class="dock-actions" id="dockActions">
+        <button class="action-btn fold" id="btnFold"><span class="ab-label">Fold</span><kbd>F</kbd></button>
+        <button class="action-btn check" id="btnCheck"><span class="ab-label">Check</span><kbd>C</kbd></button>
+        <button class="action-btn call" id="btnCall"><span class="ab-label">Call</span><span class="ab-amount" id="callAmount"></span></button>
+
+        <div class="wager-control" id="wagerControl">
+          <div class="wager-top">
+            <span class="wager-name" id="wagerLabel">Raise</span>
+            <span class="wager-range" id="wagerRange">min 20 &ndash; 1000</span>
+          </div>
+          <div class="wager-row">
+            <div class="quick-bets">
+              <button data-quick="min" title="Minimum legal amount">Min</button>
+              <button data-quick="half" title="Half the pot">&frac12; Pot</button>
+              <button data-quick="threequarter" title="Three quarters of the pot">&frac34; Pot</button>
+              <button data-quick="pot" title="Pot-sized bet">Pot</button>
+              <button data-quick="allin" title="All remaining chips">All-in</button>
+            </div>
+            <div class="slider-wrap">
+              <input type="range" id="betSlider" min="20" max="1000" value="20" step="1" aria-label="Bet amount" />
+              <input type="number" id="betAmount" min="20" max="1000" value="20" step="1" aria-label="Bet amount in chips" />
+            </div>
+          </div>
+        </div>
+
+        <button class="action-btn raise" id="btnRaise"><span class="ab-label" id="raiseLabel">Raise</span><span class="ab-amount" id="raiseAmount"></span></button>
+        <button class="action-btn allin" id="btnAllIn"><span class="ab-label">All-in</span><span class="ab-amount" id="allInAmount"></span></button>
+      </div>
+
+      <div class="dock-secondary" id="dockSecondary">
+        <button class="pill-btn gold" id="btnStart" hidden>Start game</button>
+        <button class="pill-btn gold" id="btnNext" hidden>Next hand</button>
+        <button class="pill-btn" id="btnSitOut" hidden>Sit out</button>
+        <button class="pill-btn" id="btnRebuy" hidden>Rebuy</button>
+        <button class="pill-btn" id="btnUndo" hidden title="Undo (Demo mode)">Undo &middot; pop()</button>
+        <button class="pill-btn" id="btnPeek" hidden title="Peek deck top (Demo mode)">Peek deck</button>
+        <button class="pill-btn" id="btnCopyInvite" hidden>Copy invite</button>
+        <span class="dock-hint" id="dockHint"></span>
+      </div>
+      <div class="spectator-note" id="spectatorNote" hidden>You are watching as a spectator. Hole cards stay hidden until showdown.</div>
+    </section>
+
+    <aside id="stackViz" class="stack-viz" aria-hidden="true" aria-label="Stack visualizer">
+      <header class="viz-head">
+        <div>
+          <span class="panel-kicker">LIFO &middot; O(1)</span>
+          <h2>Stack Visualizer</h2>
+        </div>
+        <button class="icon-btn" id="stackVizClose" aria-label="Close visualizer">&times;</button>
+      </header>
+      <div class="viz-body">
+        <section class="viz-block" data-stack="deck">
+          <div class="viz-title"><h3>Deck</h3><span class="viz-size" id="vizDeckSize">52</span></div>
+          <div class="viz-stack" id="vizDeckStack"></div>
+          <p class="viz-note">pop() deals &middot; peek() demo only</p>
+        </section>
+        <section class="viz-block" data-stack="burn">
+          <div class="viz-title"><h3>Burn pile</h3><span class="viz-size" id="vizBurnSize">0</span></div>
+          <div class="viz-stack viz-burn" id="vizBurnStack"></div>
+          <p class="viz-note">push() before flop, turn, river</p>
+        </section>
+        <section class="viz-block viz-action-block">
+          <div class="viz-title"><h3>Action stack</h3><span class="viz-size" id="vizActionSize">0</span></div>
+          <div class="viz-actions" id="vizActionStack"></div>
+          <p class="viz-note">push() every event &middot; undo = pop()</p>
+        </section>
+        <section class="viz-block">
+          <div class="viz-title"><h3>Pot stack</h3><span class="viz-size" id="vizPotSize">0</span></div>
+          <div class="viz-pots" id="vizPotStack"></div>
+          <p class="viz-note">layers resolved top-down at showdown</p>
+        </section>
+        <section class="viz-block viz-compact">
+          <div class="viz-title"><h3>Hand history</h3><span class="viz-size" id="vizHistorySize">0</span></div>
+          <p class="viz-note">completed hands pushed &middot; newest first</p>
+        </section>
+        <section class="viz-block">
+          <div class="viz-title"><h3>Operation feed</h3><span class="viz-live">live</span></div>
+          <div class="viz-feed" id="vizFeed"></div>
+        </section>
+      </div>
+    </aside>
+
+    <div class="viz-scrim" id="vizScrim" hidden></div>
+  </main>
+
+  <!-- ============================================================ MODALS -->
+  <div id="modalRoot" class="modal-root" hidden>
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-head">
+        <div>
+          <span class="panel-kicker" id="modalKicker">Kashe Royale</span>
+          <h2 id="modalTitle">Title</h2>
+        </div>
+        <button class="icon-btn modal-close" id="modalClose" aria-label="Close">&times;</button>
+      </header>
+      <div class="modal-body" id="modalBody"></div>
+    </section>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <div id="settingsHint" hidden></div>
+
+  <noscript>
+    <div class="noscript">Kashe Royale needs JavaScript for the table. Please enable it.</div>
+  </noscript>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
