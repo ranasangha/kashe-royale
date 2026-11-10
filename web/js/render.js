@@ -412,7 +412,10 @@ export class Renderer {
     return rotated.map((seat, index) => {
       const angle = ((90 + (index * 360) / Math.max(1, total)) * Math.PI) / 180;
       const x = 50 + 42.5 * Math.cos(angle);
-      const y = 48.5 + 39.5 * Math.sin(angle);
+      // The bottom seat holds the viewer's own (largest) cards, so sit it a
+      // little higher on the felt to stay clear of the action dock.
+      const reach = index === 0 ? 32.5 : 39.5;
+      const y = 48.5 + reach * Math.sin(angle);
       const vx = 50 - x;
       const vy = 48.5 - y;
       const length = Math.hypot(vx, vy) || 1;
