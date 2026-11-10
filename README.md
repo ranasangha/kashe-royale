@@ -2,6 +2,9 @@
 
 > Kashe Royale is the product name; **PokerStack** is the engine/package (`pokerstack/`) that powers it.
 
+**Play online:** <https://kashe-royale.onrender.com> — hosted on Render's free tier, so the first visit after
+~15 idle minutes takes up to 30 seconds to wake the server.
+
 A complete, offline, multi-device **No-Limit Texas Hold'em** table with **virtual chips only**, built for
 *Fundamentals of Data Structures* — topic: **Stack**.
 
