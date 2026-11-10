@@ -414,7 +414,7 @@ export class Renderer {
       const x = 50 + 42.5 * Math.cos(angle);
       // The bottom seat holds the viewer's own (largest) cards, so sit it a
       // little higher on the felt to stay clear of the action dock.
-      const reach = index === 0 ? 32.5 : 39.5;
+      const reach = index === 0 ? 30 : 39.5;
       const y = 48.5 + reach * Math.sin(angle);
       const vx = 50 - x;
       const vy = 48.5 - y;
