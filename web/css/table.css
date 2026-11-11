@@ -520,6 +520,14 @@
   pointer-events: none;
   white-space: nowrap;
 }
+/* the viewer's enlarged hand fills the space where the bet chip used to sit,
+   so park the chip on the felt just above the cards instead of on top of them */
+.seat.side-bottom .seat-bet {
+  top: auto;
+  left: 50%;
+  bottom: calc(100% + 4px);
+  transform: translateX(-50%);
+}
 .seat-bet::before {
   content: "";
   width: 12px;
